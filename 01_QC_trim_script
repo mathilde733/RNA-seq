@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="fastqc_1"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=12
+#SBATCH --time=12:00:00
+#SBATCH --mem=32G
+#SBATCH --ntasks=1
+#SBATCH --partition=pibu_el8
+
+module load FastQC/0.11.9-Java-11
+module load Trimmomatic/0.39-Java-11
+
+for id in SRR7821918 SRR7821919 SRR7821920 SRR7821921 SRR7821922 SRR7821937 SRR7821938 SRR7821939 SRR7821949 SRR7821950 SRR7821951 SRR7821952 SRR7821953 SRR7821968 SRR7821969 SRR7821970
+do
+  fastqc -t 2 /data/users/mjacquey/reads/${id}_*.fastq.gz -o /data/users/mjacquey/RNA_seq_project/FastQC_result
+  java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.39.jar PE -phred33\
+ /data/users/mjacquey/reads/${id}_1.fastq.gz /data/users/mjacquey/reads/${id}_2.fastq.gz \
+/data/users/mjacquey/RNA_seq_project/trim_result/${id}_1trim.fastq.gz /data/users/mjacquey/RNA_seq_project/trim_result/${id}_1unpaired.fastq.gz \
+/data/users/mjacquey/RNA_seq_project/trim_result/${id}_2trim.fastq.gz /data/users/mjacquey/RNA_seq_project/trim_result/${id}_2unpaired.fastq.gz \
+LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+  fastqc -t 2 /data/users/mjacquey/RNA_seq_project/trim_result/${id}_*trim.fastq.gz -o /data/users/mjacquey/RNA_seq_project/trim_result
+done
