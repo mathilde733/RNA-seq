@@ -111,3 +111,41 @@ Oas3 <-DE_lung["ENSMUSG00000032661",]
 Oas3$log2FoldChange > 0 #true -- >overexpression in blood
 Oas3 <- plotCounts(dds, "ENSMUSG00000032661", intgroup = c("groups"), returnData = TRUE)
 boxplot(count ~ groups , data=Oas3, main = "Expression of Oas3")
+
+
+
+
+#### autre: (count nb of differential genes, nb of upregulated and downregulated genes)
+
+de_genes_blood <- results_blood %>%
+  as.data.frame() %>%
+  filter(padj < 0.05)
+
+# Count total DE genes
+num_de_genes <- nrow(de_genes_blood)
+
+# Classify as up- or down-regulated based on log2 fold change (log2FC)
+upregulated <- de_genes_blood %>% filter(log2FoldChange > 0) %>% nrow()
+downregulated <- de_genes_blood %>% filter(log2FoldChange < 0) %>% nrow()
+
+# Output counts
+cat("Total DE genes:", num_de_genes, "\n")
+cat("Upregulated:", upregulated, "\n")
+cat("Downregulated:", downregulated, "\n")
+
+
+de_genes_lung <- results_lung %>%
+  as.data.frame() %>%
+  filter(padj < 0.05)
+
+# Count total DE genes
+num_de_genes <- nrow(de_genes_lung)
+
+# Classify as up- or down-regulated based on log2 fold change (log2FC)
+upregulated <- de_genes_lung %>% filter(log2FoldChange > 0) %>% nrow()
+downregulated <- de_genes_lung %>% filter(log2FoldChange < 0) %>% nrow()
+
+# Output counts
+cat("Total DE genes:", num_de_genes, "\n")
+cat("Upregulated:", upregulated, "\n")
+cat("Downregulated:", downregulated, "\n")
