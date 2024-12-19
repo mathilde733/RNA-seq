@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="mapping"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=12
+#SBATCH --time=12:00:00
+#SBATCH --mem=64G
+#SBATCH --ntasks=1
+#SBATCH --partition=pibu_el8
+
+apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif hisat2-build ./Mus_musculus.GRCm39.dna.primary_assembly.fa ./reference_index
+
+for id in SRR7821918 SRR7821919 SRR7821920 SRR7821921 SRR7821922 SRR7821937 SRR7821938 SRR7821939 SRR7821949 SRR7821950 SRR7821951 SRR7821952 SRR7821953 SRR7821968 SRR7821969 SRR7821970
+do
+  apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif hisat2 -x /data/users/mjacquey/RNA_seq_project/mapping/reference_index -1 \
+/data/users/mjacquey/RNA_seq_project/trim_result/${id}_1trim.fastq.gz -2 /data/users/mjacquey/RNA_seq_project/trim_result/${id}_2trim.fastq.gz \
+-S /data/users/mjacquey/RNA_seq_project/mapping/result/${id}_aligned_reads.sam -p 12 --rna-strandness RF
+  apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif samtools view \
+-hbS /data/users/mjacquey/RNA_seq_project/mapping/result/${id}*.sam > /data/users/mjacquey/RNA_seq_project/mapping/result/${id}.bam
+  apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif samtools sort -m 32G -@ 12 \
+-o /data/users/mjacquey/RNA_seq_project/mapping/result/${id}sorted.bam -T temp /data/users/mjacquey/RNA_seq_project/mapping/result/${id}.bam
+  apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif samtools index /data/users/mjacquey/RNA_seq_project/mapping/result/${id}sorted.bam
+done
