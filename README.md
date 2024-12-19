@@ -15,15 +15,16 @@ The samples are blood and lungs that were infected or not, as described on the t
 | SRR7821922  | Infected  | Lung             |              | SRR7821953  | Infected  | Blood            |
 
 
-First step: Quality control
+**First step: Quality control**
 
 You will find the script to perform a FastQC on ___ and then the script to perform a MultiQC on ____ . Additionally, I perform a trimming using trimmomatic but it was not necessary.
 
-Second step: Mapping
+**Second step: Mapping**
 
-Third step: Count the number of reads per gene
+**Third step: Count the number of reads per gene**
 
-Final step: in R 
-Exploratory data analysis 
+**Final step: in R** 
 
-Differential expression and overrepresentation analysis 
+**Exploratory data analysis** 
+
+**Differential expression and overrepresentation analysis** 
