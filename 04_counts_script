@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="mapping"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=12
+#SBATCH --time=12:00:00
+#SBATCH --mem=64G
+#SBATCH --ntasks=1
+#SBATCH --partition=pibu_el8
+
+apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif hisat2-build ./Mus_musculus.GRCm39.dna.primary_assembly.fa ./r
+eference_index
+
+for id in SRR7821918 SRR7821919 SRR7821920 SRR7821921 SRR7821922 SRR7821937 SRR7821938 SRR7821939 SRR7821949 SRR7821950 SRR7821951 SRR7821952 SRR7821953 SRR7821968 SRR7821969 SRR7821970
+do 
+  featureCounts -p -s 2 -t exon -g gene_id -a /data/users/mjacquey/RNA_seq_project/mapping/Mus_musculus.GRCm39.113.gtf \
+-o /data/users/mjacquey/RNA_seq_project/mapping/counts_result/all.counts.txt /data/users/mjacquey/RNA_seq_project/mapping/result/*sorted.bam
+done
