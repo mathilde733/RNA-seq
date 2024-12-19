@@ -1,0 +1,113 @@
+#a) BLOOD
+
+results_blood <- results(dds, contrast = c("groups", "control_blood", "infected_blood"))
+summary(results_blood)
+
+# Filter significant genes (adjusted p-value < 0.05)
+DE_blood <- results_blood[which(results_blood$padj < 0.05), ]
+summary(DE_blood)  # Display the top significant genes
+
+ensembl <- useEnsembl(biomart = 'genes', dataset = 'mmusculus_gene_ensembl', version = 110)#specify version
+ensembl_gene_ids_b <- rownames(DE_blood)
+gene_info_b <- getBM(attributes = c("ensembl_gene_id", "external_gene_name"),
+                     filters = "ensembl_gene_id",
+                     values = ensembl_gene_ids_b,
+                     mart = ensembl)
+
+# Convertir gene_info_b en un dataframe pour pouvoir le joindre
+gene_info_b <- as.data.frame(gene_info_b)
+DE_blood_df <- as.data.frame(DE_blood)
+# Assurez-vous que DE_blood a une colonne 'ensembl_gene_id' avec les mêmes identifiants
+# Si DE_blood a déjà les identifiants en Ensembl comme rownames, vous pouvez les transformer en colonne pour la jointure
+DE_blood$ensembl_gene_id <- rownames(DE_blood)
+
+# Effectuer la jointure sur les identifiants Ensembl
+DE_blood_with_gene_names <- merge(DE_blood_df, gene_info_b, by = "ensembl_gene_id", all.x = TRUE)
+
+# Vérifiez maintenant l'objet DE_blood_with_gene_names
+head(DE_blood_with_gene_names)
+
+#volcano plot to visualize DE genes
+DE_blood_with_gene_names$pvalue[DE_blood_with_gene_names$pvalue == 0] <- 1e-10
+blood_volcano <- EnhancedVolcano(DE_blood_with_gene_names,
+                                 lab = DE_blood_with_gene_names$external_gene_name,
+                                 x = 'log2FoldChange',
+                                 y = 'pvalue',
+                                 col = c("pink3", "olivedrab", "cyan3", "coral1"),
+                                 title = "DE genes - Blood Case vs Blood Control")
+
+#explore expression of gene from the article
+oas1a <-DE_blood["ENSMUSG00000052776",]
+oas1a$log2FoldChange > 0 #true -- >overexpression in blood
+oas1a <- plotCounts(dds, "ENSMUSG00000052776", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=oas1a, main = "Expression of Oas1a")
+
+zbp1 <-DE_blood["ENSMUSG00000027514",]
+zbp1$log2FoldChange > 0 #true -- >overexpression in blood
+zbp1 <- plotCounts(dds, "ENSMUSG00000027514", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=zbp1, main = "Expression of Zbp1")
+
+
+#b) LUNG
+results_lung <- results(dds, contrast = c("groups", "control_lung", "infected_lung"))
+summary(results_lung)
+
+# Filter significant genes (adjusted p-value < 0.05)
+DE_lung <- results_lung[which(results_lung$padj < 0.05), ]
+summary(DE_lung) # Display the top significant genes
+#add genes name
+ensembl_gene_ids_l <- rownames(DE_lung)
+
+gene_info_l <- getBM(attributes = c("ensembl_gene_id", "external_gene_name"),
+                     filters = "ensembl_gene_id",
+                     values = ensembl_gene_ids_l,
+                     mart = ensembl)
+# Convertir gene_info_b en un dataframe pour pouvoir le joindre
+gene_info_l <- as.data.frame(gene_info_l)
+DE_lung_df <- as.data.frame(DE_lung)
+# Assurez-vous que DE_blood a une colonne 'ensembl_gene_id' avec les mêmes identifiants
+# Si DE_blood a déjà les identifiants en Ensembl comme rownames, vous pouvez les transformer en colonne pour la jointure
+DE_lung$ensembl_gene_id <- rownames(DE_lung)
+
+# Effectuer la jointure sur les identifiants Ensembl
+DE_lung_with_gene_names <- merge(DE_lung_df, gene_info_l, by = "ensembl_gene_id", all.x = TRUE)
+
+# Vérifiez maintenant l'objet DE_blood_with_gene_names
+head(DE_lung_with_gene_names)
+
+#volcano plot
+DE_lung_with_gene_names$pvalue[DE_lung_with_gene_names$pvalue == 0] <- 1e-10
+EnhancedVolcano(DE_lung_with_gene_names,
+                lab = DE_lung_with_gene_names$external_gene_name,
+                x = 'log2FoldChange',
+                y = 'pvalue',
+                col = c("pink3", "olivedrab", "cyan3", "coral1"),
+                title = "DE genes -  Lung Case vs Lung Control")
+
+
+#explore expression of gene from the article
+fcgr1 <-DE_lung["ENSMUSG00000015947",]
+fcgr1$log2FoldChange > 0 #True -- >overexpression in lung
+fcgr1 <- plotCounts(dds, "ENSMUSG00000015947", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=fcgr1, main = "Expression of Fcgr1")
+
+Ifi204 <-DE_lung["ENSMUSG00000073489",]
+Ifi204$log2FoldChange > 0 #true -- >overexpression in blood
+Ifi204 <- plotCounts(dds, "ENSMUSG00000073489", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Ifi204, main = "Expression of Ifi204")
+
+Rsad2 <-DE_lung["ENSMUSG00000020641",]
+Rsad2$log2FoldChange > 0 #true -- >overexpression in blood
+Rsad2 <- plotCounts(dds, "ENSMUSG00000020641", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Rsad2, main = "Expression of RSAD2")
+
+Isg15 <-DE_lung["ENSMUSG00000035692",]
+Isg15$log2FoldChange > 0 #true -- >overexpression in blood
+Isg15 <- plotCounts(dds, "ENSMUSG00000035692", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Isg15, main = "Expression of Isg15")
+
+ 
+Oas3 <-DE_lung["ENSMUSG00000032661",]
+Oas3$log2FoldChange > 0 #true -- >overexpression in blood
+Oas3 <- plotCounts(dds, "ENSMUSG00000032661", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Oas3, main = "Expression of Oas3")
