@@ -1,0 +1,56 @@
+library(clusterProfiler)
+library(org.Mm.eg.db)
+
+#a) BLOOD
+gene <- DE_blood_with_gene_names$ensembl_gene_id  # Differentially expressed genes
+universe <- rownames(dds)  # All genes in the analysis
+
+go_blood <- enrichGO(
+  gene          = gene,
+  universe      = universe,
+  OrgDb         = org.Mm.eg.db,
+  ont           = "BP",         # Choose BP, MF, CC, or ALL
+  keyType       = "ENSEMBL"
+)
+
+# View the first few enriched GO terms
+head(go_blood)
+# Summarize and visualize results
+summary(go_blood)
+
+# Visualize with a barplot
+barplot(go_blood, showCategory = 10, title = "Top 10 GO Terms - infected vs control blood")
+# Create a dot plot
+dotplot(go_blood, showCategory = 10, title = "GO Term Enrichment - infected vs control blood")
+
+write.csv(as.data.frame(go_blood), file = "GOblood_enrichment_results.csv")
+
+
+#b) LUNG
+
+library(clusterProfiler)
+library(org.Mm.eg.db)
+
+gene <- DE_lung_with_gene_names$ensembl_gene_id  # Differentially expressed genes
+universe <- rownames(dds)  # All genes in the analysis
+
+go_lung <- enrichGO(
+  gene          = gene,
+  universe      = universe,
+  OrgDb         = org.Mm.eg.db,
+  ont           = "BP",         # Choose BP, MF, CC, or ALL
+  keyType       = "ENSEMBL"
+)
+
+
+# View the first few enriched GO terms
+head(go_lung)
+# Summarize and visualize results
+summary(go_lung)
+
+# Visualize with a barplot
+barplot(go_lung, showCategory = 10, title = "Top 10 GO Terms - infected vs control lung")
+# Create a dot plot
+dotplot(go_lung, showCategory = 10, title = "GO Term Enrichment - infected vs control lung")
+
+write.csv(as.data.frame(go_lung), file = "GOlung_enrichment_results1.csv")
