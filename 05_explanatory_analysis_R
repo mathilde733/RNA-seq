@@ -1,0 +1,131 @@
+BiocManager::install("clusterProfiler")
+BiocManager::install("org.Mm.eg.db")
+BiocManager::install("biomaRt")
+BiocManager::install('EnhancedVolcano')
+library(DESeq2)
+library(biomaRt)
+library(org.Mm.eg.db)
+library(EnhancedVolcano)
+library(clusterProfiler)
+
+#RNA_SEQ PROJECT
+
+library(DESeq2)
+
+featureCounts <- read.table("reformatted_counts.txt", header=TRUE, row.names=1)
+#modification des noms de colonnes
+colnames(featureCounts) <- c("SRR7821918",
+                              "SRR7821919",
+                              "SRR7821920",
+                              "SRR7821921",
+                              "SRR7821922",
+                              "SRR7821937",
+                              "SRR7821938",
+                              "SRR7821939",
+                              "SRR7821949",
+                              "SRR7821950",
+                              "SRR7821951",
+                              "SRR7821952",
+                              "SRR7821953",
+                              "SRR7821968",
+                              "SRR7821969",
+                              "SRR7821970")
+
+#création pour l'object
+colData <- data.frame(
+  groups = c("infected_lung", 
+                "infected_lung",
+                "infected_lung",
+                "infected_lung",
+                "infected_lung",
+                "control_lung",
+                "control_lung",
+                "control_lung",
+                "infected_blood",
+                "infected_blood",
+                "infected_blood",
+                "infected_blood",
+                "infected_blood",
+                "control_blood",
+                "control_blood",
+                "control_blood"),
+  row.names = c("SRR7821918",
+  "SRR7821919",
+  "SRR7821920",
+  "SRR7821921",
+  "SRR7821922",
+  "SRR7821937",
+  "SRR7821938",
+  "SRR7821939",
+  "SRR7821949",
+  "SRR7821950",
+  "SRR7821951",
+  "SRR7821952",
+  "SRR7821953",
+  "SRR7821968",
+  "SRR7821969",
+  "SRR7821970")
+)
+colData$groups <- factor(colData$groups)
+design <- ~ groups
+
+#Create a DESeqDataSet object
+dds <- DESeqDataSetFromMatrix(
+  countData = featureCounts,
+  colData = colData,
+  design = design
+)
+# Run the DESeq pipeline
+dds <- DESeq(dds)
+
+#PLOT THE PCA AND A HEATMAP 
+
+#to remove the dependence <=> Use Variance Stabilizing Transformation (vst):
+#generally preferred because faster and adapted to larger datasets
+#we typically do not want to consider the experimental groups and set blind=TRUE
+vsd <- vst(dds, blind = TRUE)
+
+#Assess how the samples cluster based on their gene expression profiles
+plotPCA(vsd, intgroup = "groups")  # Replace 'condition' with a column from your metadata
+
+#create a heatmap 
+library(pheatmap)
+# Extract transformed values
+vsd_mat <- assay(vsd)
+# Calculate sample-to-sample distances
+sample_dist <- dist(t(vsd_mat))
+annotation <- data.frame(groups = colData$groups)
+rownames(annotation) <- rownames(colData)
+pheatmap(
+  as.matrix(sample_dist),
+  annotation_col = annotation,
+  annotation_row = annotation,
+  display_numbers = TRUE
+)
+
+
+###OPTIONNEL : POUR AVOIR UNE AUTRE VUE
+### analyse PCoA (Principal Coordinates Analysis) 
+#analysis provides a graphical representation of a matrix among all sample replicates
+
+#extraction of normalized data
+normalized_data <- assay(vsd)
+library(vegan)
+# Calcul de la distance euclidean (comparison between samples)
+dist_matrix <- vegdist(t(normalized_data), method = "euclidean")
+# Réaliser le PCoA
+pcoa_results <- cmdscale(dist_matrix, eig = TRUE, k = 2)
+
+library(ggplot2)
+# Préparer les données pour ggplot2
+pcoa_df <- data.frame(
+  PC1 = pcoa_results$points[, 1],
+  PC2 = pcoa_results$points[, 2],
+  groups = colData$groups
+)
+
+# Visualisation
+ggplot(pcoa_df, aes(x = PC1, y = PC2, color = groups)) +
+  geom_point(size = 4) +
+  labs(title = "PCoA", x = "PC1", y = "PC2") +
+  theme_minimal()
