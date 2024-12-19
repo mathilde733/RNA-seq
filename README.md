@@ -1,7 +1,7 @@
 **Projet of RNA-SEQUENCING about _T.gondii_ infection:**
 
 This project is a part of the study conducted by Singhania et al, 2019, [*Transcriptional profiling unveils type I and II interferon networks in blood and tissues across diseases*](https://www.nature.com/articles/s41467-019-10601-6).
-The samples are blood and lungs that were infected or not, as described on the table below.
+The samples are mice's blood and lungs that were infected or not, as described on the table below.
 
 | Code        | Condition | Origin of Sample |              | Code        | Condition | Origin of Sample |
 |-------------|-----------|------------------|--------------|-------------|-----------|------------------|
