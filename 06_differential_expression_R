@@ -37,15 +37,30 @@ blood_volcano <- EnhancedVolcano(DE_blood_with_gene_names,
                                  title = "DE genes - Blood Case vs Blood Control")
 
 #explore expression of gene from the article
-oas1a <-DE_blood["ENSMUSG00000052776",]
-oas1a$log2FoldChange > 0 #true -- >overexpression in blood
-oas1a <- plotCounts(dds, "ENSMUSG00000052776", intgroup = c("groups"), returnData = TRUE)
-boxplot(count ~ groups , data=oas1a, main = "Expression of Oas1a")
+Gbp5 <-DE_blood["ENSMUSG00000105504",]
+Gbp5$log2FoldChange > 0 #true -- >overexpression in blood
+Gbp5 <- plotCounts(dds, "ENSMUSG00000105504", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Gbp5, main = "Expression of Gbp5")
+ 
+Wars1 <-DE_blood["ENSMUSG00000021266",]
+Wars1$log2FoldChange > 0 #true -- >overexpression in blood
+Wars1 <- plotCounts(dds, "ENSMUSG00000021266", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Wars1, main = "Expression of Wars1")
 
-zbp1 <-DE_blood["ENSMUSG00000027514",]
-zbp1$log2FoldChange > 0 #true -- >overexpression in blood
-zbp1 <- plotCounts(dds, "ENSMUSG00000027514", intgroup = c("groups"), returnData = TRUE)
-boxplot(count ~ groups , data=zbp1, main = "Expression of Zbp1")
+Cd79a <-DE_blood["ENSMUSG00000003379",]
+Cd79a$log2FoldChange > 0 #true -- >overexpression in blood
+Cd79a <- plotCounts(dds, "ENSMUSG00000003379", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Cd79a, main = "Expression of Cd79a")
+
+Dcaf12 <-DE_blood["ENSMUSG00000028436",]
+Dcaf12$log2FoldChange > 0 #true -- >overexpression in blood
+Dcaf12 <- plotCounts(dds, "ENSMUSG00000028436", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Dcaf12, main = "Expression of Dcaf12")
+ 
+Fcer2a <-DE_blood["ENSMUSG00000005540",]
+Fcer2a$log2FoldChange > 0 #true -- >overexpression in blood
+Fcer2a <- plotCounts(dds, "ENSMUSG00000005540", intgroup = c("groups"), returnData = TRUE)
+boxplot(count ~ groups , data=Fcer2a, main = "Expression of Fcer2a")
 
 
 #b) LUNG
