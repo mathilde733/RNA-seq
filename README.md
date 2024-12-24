@@ -1,6 +1,6 @@
 # **Project: _Toxoplasma gondii_ infection in the _Mus musculus_ Model, Immune response and differentially gene expression analysis**
 
-This project is a part of the study conducted by Singhania et al, 2019, [*Transcriptional profiling unveils type I and II interferon networks in blood and tissues across diseases*](https://www.nature.com/articles/s41467-019-10601-6).
+This project is a part of the study conducted by [*Singhania et al, 2019, Transcriptional profiling unveils type I and II interferon networks in blood and tissues across diseases*](https://www.nature.com/articles/s41467-019-10601-6).
 
 _Toxoplasma gondii_ is a widespread intracellular protozoan parasite capable of infecting most warm-blooded animals, including humans and rodents. The infection primarily targets various tissues, including the lungs and blood, where it can cause systemic and localized effects. This parasite is notable for its complex life cycle, which is divided in sexual and asexual phases. This life cycle contains intermediary hosts such as birds or any mammals, except felines that are considered as definitive host of this parasite. The infection caused by _Toxoplasma gondii_ is called the toxoplasmosis, which is typically asymptomatic in healthy individuals, but poses significant risks to immunocompromised persons or pregnant women. Additionaly, according to previous studies, it appears that this parasite can be linked to human neuropsychiatric disorders. 
 
@@ -49,10 +49,15 @@ The tool used during this step is R with different packages that have to be down
 The corresponding script of the **differential expression analysis** can be found on ___ and aims to compare which are the differentially expressed genes between the conditions based on tissues. The threshold is here based on 0.05 (5%) but you can use a lower threshold to have less significant genes. Based on these results, you can calculate the number of up- and down-regulated genes in the samples. Visualization can be done with Volcano Plots. 
 The tool used during this step is R using the packages: library(biomaRt), library(org.Mm.eg.db) and library(EnhancedVolcano).
 
-The outliers observed on the Volcano Plots were analysed with Boxplots to have a graphical representation of their distributions within the groups. You can simply run the analysis using any genes that are associated with its own ENSEMBL gene IDs that you can find on the [*website*] (https://www.ensembl.org/index.html).
+The outliers observed on the Volcano Plots were analysed with Boxplots to have a graphical representation of their distributions within the groups. You can simply run the analysis using any genes that are associated with its own ENSEMBL gene IDs that you can find on the [*website*](https://www.ensembl.org/index.html).
 
 The corresponding script of the **overrepresentation analysis** can be found on ___. The overrepresentation analysis provides Gene Ontology (GO) terms that can be visualize using dot plots and bar plots. Again, be careful of what options you specify in R. For the purpose of this project, I selected "BP - Biological Processes" as subontology but you can use another one. 
 The tool used during this step is R using packages: library(clusterProfiler) and library(org.Mm.eg.db)
+
+## ** On this repository, you will also find:**
+- the FastQC files
+- the MultiQC report
+- the featureCounts table 
 
 
 
