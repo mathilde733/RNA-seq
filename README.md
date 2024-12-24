@@ -27,12 +27,12 @@ The tools used during this step are: FastQC, Trimmomatic and MultiQC. The trimmi
 
 **Second step: Mapping**
 
-The corresponding script can be found on ___ and passed through different steps such as building the index and mapping the reads to the reference genome, using the [*reference genome*] (https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz) and the [*annotation file*] (https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz).
+The corresponding script can be found on ___ and passed through different steps such as building the index and mapping the reads to the reference genome, using the [*reference genome*](https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz) and the [*annotation file*](https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz).
 The tools used during this step are: HISAT2, Samtools and optionally Integrative Genomics Viewer (IGV) to visualize the genome. 
 
 **Third step: Count the number of reads per gene**
 
-The corresponding script can be found on ___ and used the same annotation file as for the mapping, the [*annotation file*] (https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz).
+The corresponding script can be found on ___ and used the same annotation file as for the mapping, the [*annotation file*](https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz).
 The tool used during this step is featureCounts.
 
 This is a key step because the table that you will obtained with featureCounts will be used for the R analysis, e.g., to create the DESeq2 object. For further analysis, you have to download the featureCounts table. 
