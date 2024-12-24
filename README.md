@@ -1,4 +1,4 @@
-#**Project: _Toxoplasma gondii_ infection in the _Mus musculus_ Model, Immune response and differentially gene expression analysis**
+# **Project: _Toxoplasma gondii_ infection in the _Mus musculus_ Model, Immune response and differentially gene expression analysis**
 
 This project is a part of the study conducted by Singhania et al, 2019, [*Transcriptional profiling unveils type I and II interferon networks in blood and tissues across diseases*](https://www.nature.com/articles/s41467-019-10601-6).
 
@@ -20,31 +20,31 @@ The samples are RNA sequencing data of mice's blood and lungs that were infected
 | SRR7821922  | Infected  | Lung             |              | SRR7821953  | Infected  | Blood            |
 
 
-##**First step: Quality control**
+## **First step: Quality control**
 
 The quality control script can be found on ___. The MultiQC script can be found on ___. 
 The tools used during this step are: FastQC, Trimmomatic and MultiQC. The trimming was not mandatory but can ensure the quality of the reads. Alternative can be used such as Fastp or CutAdapt.
 
-##**Second step: Mapping**
+## **Second step: Mapping**
 
 The corresponding script can be found on ___ and passed through different steps such as building the index and mapping the reads to the reference genome, using the [*reference genome*](https://ftp.ensembl.org/pub/release-113/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz) and the [*annotation file*](https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz).
 The tools used during this step are: HISAT2, Samtools and optionally Integrative Genomics Viewer (IGV) to visualize the genome. 
 
-##**Third step: Count the number of reads per gene**
+## **Third step: Count the number of reads per gene**
 
 The corresponding script can be found on ___ and used the same annotation file as for the mapping, the [*annotation file*](https://ftp.ensembl.org/pub/release-113/gtf/mus_musculus/Mus_musculus.GRCm39.113.gtf.gz).
 The tool used during this step is featureCounts.
 
 This is a key step because the table that you will obtained with featureCounts will be used for the R analysis, e.g., to create the DESeq2 object. For further analysis, you have to download the featureCounts table. 
 
-##**Final step: in R** 
+## **Final step: in R** 
 
-###**Exploratory data analysis** 
+### **Exploratory data analysis** 
 
 The corresponding script can be found on ___ and passed through different steps such as the creation of a DESeq object and then the visualization of gene expression patterns using several tools. The clustering of the groups can be visualize with a Principal Component Analysis (PCA), a Principal Coordinates Analysis (PCoA) and a Heat Map. 
 The tool used during this step is R with different packages that have to be downloaded before running the analysis: library(DESeq2), library(clusterProfiler), library(pheatmap), library(vegan) and library(ggplot2). 
 
-###**Differential expression and overrepresentation analysis** 
+### **Differential expression and overrepresentation analysis** 
 
 The corresponding script of the **differential expression analysis** can be found on ___ and aims to compare which are the differentially expressed genes between the conditions based on tissues. The threshold is here based on 0.05 (5%) but you can use a lower threshold to have less significant genes. Based on these results, you can calculate the number of up- and down-regulated genes in the samples. Visualization can be done with Volcano Plots. 
 The tool used during this step is R using the packages: library(biomaRt), library(org.Mm.eg.db) and library(EnhancedVolcano).
