@@ -54,7 +54,7 @@ The outliers observed on the Volcano Plots were analysed with Boxplots to have a
 The corresponding script of the **overrepresentation analysis** can be found on [07_overrepresentation_R](https://github.com/mathilde733/RNA-seq/blob/main/07_overrepresentation_R). The overrepresentation analysis provides Gene Ontology (GO) terms that can be visualize using dot plots and bar plots. Again, be careful of what options you specify in R. For the purpose of this project, I selected "BP - Biological Processes" as subontology but you can use another one. 
 The tool used during this step is R using packages: library(clusterProfiler) and library(org.Mm.eg.db)
 
-## ** On this repository, you will also find:**
+## **On this repository, you will also find:**
 - the FastQC files
 - the [MultiQC report](https://github.com/mathilde733/RNA-seq/blob/main/multiqc_report.html)
 - the featureCounts table 
