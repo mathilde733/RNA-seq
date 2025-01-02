@@ -1,33 +1,39 @@
-#a) BLOOD
+#GENERAL: the dds object was created on the previous script, e.g., 05_explanatory_analysis_R.
+
+BiocManager::install("clusterProfiler")
+BiocManager::install("org.Mm.eg.db")
+BiocManager::install("biomaRt")
+BiocManager::install('EnhancedVolcano')
+library(DESeq2)
+library(biomaRt)
+library(org.Mm.eg.db)
+library(EnhancedVolcano)
+library(clusterProfiler)
+
+#A) For BLOOD samples
 
 results_blood <- results(dds, contrast = c("groups", "control_blood", "infected_blood"))
 summary(results_blood)
 
-# Filter significant genes (adjusted p-value < 0.05)
+#Filter significant genes (adjusted p-value < 0.05) but the threshold can be modified 
 DE_blood <- results_blood[which(results_blood$padj < 0.05), ]
-summary(DE_blood)  # Display the top significant genes
+summary(DE_blood)  #display the top significant genes
 
-ensembl <- useEnsembl(biomart = 'genes', dataset = 'mmusculus_gene_ensembl', version = 110)#specify version
+ensembl <- useEnsembl(biomart = 'genes', dataset = 'mmusculus_gene_ensembl', version = 110) #specify version
 ensembl_gene_ids_b <- rownames(DE_blood)
 gene_info_b <- getBM(attributes = c("ensembl_gene_id", "external_gene_name"),
                      filters = "ensembl_gene_id",
                      values = ensembl_gene_ids_b,
                      mart = ensembl)
 
-# Convertir gene_info_b en un dataframe pour pouvoir le joindre
 gene_info_b <- as.data.frame(gene_info_b)
 DE_blood_df <- as.data.frame(DE_blood)
-# Assurez-vous que DE_blood a une colonne 'ensembl_gene_id' avec les mêmes identifiants
-# Si DE_blood a déjà les identifiants en Ensembl comme rownames, vous pouvez les transformer en colonne pour la jointure
+#Be sure that DE_blood contains a column named 'ensembl_gene_id'
 DE_blood$ensembl_gene_id <- rownames(DE_blood)
-
-# Effectuer la jointure sur les identifiants Ensembl
 DE_blood_with_gene_names <- merge(DE_blood_df, gene_info_b, by = "ensembl_gene_id", all.x = TRUE)
-
-# Vérifiez maintenant l'objet DE_blood_with_gene_names
 head(DE_blood_with_gene_names)
 
-#volcano plot to visualize DE genes
+#Volcano plot to visualize DE genes
 DE_blood_with_gene_names$pvalue[DE_blood_with_gene_names$pvalue == 0] <- 1e-10
 blood_volcano <- EnhancedVolcano(DE_blood_with_gene_names,
                                  lab = DE_blood_with_gene_names$external_gene_name,
@@ -36,7 +42,7 @@ blood_volcano <- EnhancedVolcano(DE_blood_with_gene_names,
                                  col = c("pink3", "olivedrab", "cyan3", "coral1"),
                                  title = "DE genes - Blood Case vs Blood Control")
 
-#explore expression of gene from the article
+#Explore expression of gene from the article
 Gbp5 <-DE_blood["ENSMUSG00000105504",]
 Gbp5$log2FoldChange > 0 #true -- >overexpression in blood
 Gbp5 <- plotCounts(dds, "ENSMUSG00000105504", intgroup = c("groups"), returnData = TRUE)
@@ -63,34 +69,29 @@ Fcer2a <- plotCounts(dds, "ENSMUSG00000005540", intgroup = c("groups"), returnDa
 boxplot(count ~ groups , data=Fcer2a, main = "Expression of Fcer2a")
 
 
-#b) LUNG
+#B) For LUNG samples
 results_lung <- results(dds, contrast = c("groups", "control_lung", "infected_lung"))
 summary(results_lung)
 
-# Filter significant genes (adjusted p-value < 0.05)
+#Filter significant genes (adjusted p-value < 0.05) but the threshold can be modified 
 DE_lung <- results_lung[which(results_lung$padj < 0.05), ]
-summary(DE_lung) # Display the top significant genes
-#add genes name
+summary(DE_lung) #Display the top significant genes
+#Add genes name
 ensembl_gene_ids_l <- rownames(DE_lung)
 
 gene_info_l <- getBM(attributes = c("ensembl_gene_id", "external_gene_name"),
                      filters = "ensembl_gene_id",
                      values = ensembl_gene_ids_l,
                      mart = ensembl)
-# Convertir gene_info_b en un dataframe pour pouvoir le joindre
+
 gene_info_l <- as.data.frame(gene_info_l)
 DE_lung_df <- as.data.frame(DE_lung)
-# Assurez-vous que DE_blood a une colonne 'ensembl_gene_id' avec les mêmes identifiants
-# Si DE_blood a déjà les identifiants en Ensembl comme rownames, vous pouvez les transformer en colonne pour la jointure
+#Be sure that DE_lung contains a column named 'ensembl_gene_id'
 DE_lung$ensembl_gene_id <- rownames(DE_lung)
-
-# Effectuer la jointure sur les identifiants Ensembl
 DE_lung_with_gene_names <- merge(DE_lung_df, gene_info_l, by = "ensembl_gene_id", all.x = TRUE)
-
-# Vérifiez maintenant l'objet DE_blood_with_gene_names
 head(DE_lung_with_gene_names)
 
-#volcano plot
+#Volcano plot
 DE_lung_with_gene_names$pvalue[DE_lung_with_gene_names$pvalue == 0] <- 1e-10
 EnhancedVolcano(DE_lung_with_gene_names,
                 lab = DE_lung_with_gene_names$external_gene_name,
@@ -100,7 +101,7 @@ EnhancedVolcano(DE_lung_with_gene_names,
                 title = "DE genes -  Lung Case vs Lung Control")
 
 
-#explore expression of gene from the article
+#Explore expression of gene from the article
 fcgr1 <-DE_lung["ENSMUSG00000015947",]
 fcgr1$log2FoldChange > 0 #True -- >overexpression in lung
 fcgr1 <- plotCounts(dds, "ENSMUSG00000015947", intgroup = c("groups"), returnData = TRUE)
@@ -121,29 +122,25 @@ Isg15$log2FoldChange > 0 #true -- >overexpression in blood
 Isg15 <- plotCounts(dds, "ENSMUSG00000035692", intgroup = c("groups"), returnData = TRUE)
 boxplot(count ~ groups , data=Isg15, main = "Expression of Isg15")
 
- 
 Oas3 <-DE_lung["ENSMUSG00000032661",]
 Oas3$log2FoldChange > 0 #true -- >overexpression in blood
 Oas3 <- plotCounts(dds, "ENSMUSG00000032661", intgroup = c("groups"), returnData = TRUE)
 boxplot(count ~ groups , data=Oas3, main = "Expression of Oas3")
 
 
-
-
-#### autre: (count nb of differential genes, nb of upregulated and downregulated genes)
+#C) To count the number of differential genes; number of up- and down-regulated genes
 
 de_genes_blood <- results_blood %>%
   as.data.frame() %>%
   filter(padj < 0.05)
-
-# Count total DE genes
+#Count total DE genes for BLOOD samples
 num_de_genes <- nrow(de_genes_blood)
 
-# Classify as up- or down-regulated based on log2 fold change (log2FC)
+#Classify as up- or down-regulated based on log2 fold change (log2FC)
 upregulated <- de_genes_blood %>% filter(log2FoldChange > 0) %>% nrow()
 downregulated <- de_genes_blood %>% filter(log2FoldChange < 0) %>% nrow()
 
-# Output counts
+#Output counts
 cat("Total DE genes:", num_de_genes, "\n")
 cat("Upregulated:", upregulated, "\n")
 cat("Downregulated:", downregulated, "\n")
@@ -152,15 +149,14 @@ cat("Downregulated:", downregulated, "\n")
 de_genes_lung <- results_lung %>%
   as.data.frame() %>%
   filter(padj < 0.05)
-
-# Count total DE genes
+#Count total DE genes for LUNG samples
 num_de_genes <- nrow(de_genes_lung)
 
-# Classify as up- or down-regulated based on log2 fold change (log2FC)
+#Classify as up- or down-regulated based on log2 fold change (log2FC)
 upregulated <- de_genes_lung %>% filter(log2FoldChange > 0) %>% nrow()
 downregulated <- de_genes_lung %>% filter(log2FoldChange < 0) %>% nrow()
 
-# Output counts
+#Output counts
 cat("Total DE genes:", num_de_genes, "\n")
 cat("Upregulated:", upregulated, "\n")
 cat("Downregulated:", downregulated, "\n")
