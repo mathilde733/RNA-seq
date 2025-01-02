@@ -57,7 +57,7 @@ The tool used during this step is R using packages: library(clusterProfiler) and
 ## **On this repository, you will also find:**
 - the FastQC files
 - the [MultiQC report](https://github.com/mathilde733/RNA-seq/blob/main/multiqc_report.html)
-- the featureCounts table 
+- the [featureCounts table](https://github.com/mathilde733/RNA-seq/blob/main/reformatted_counts.txt) 
 
 
 
