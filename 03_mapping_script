@@ -9,6 +9,7 @@
 #SBATCH --ntasks=1
 #SBATCH --partition=pibu_el8
 
+#IMPORTANT: you have to download the reference genome and the annotation file from ENSEMBL before running this script (details are on README.md)
 apptainer exec --bind /data/ /containers/apptainer/hisat2_samtools_408dfd02f175cd88.sif hisat2-build ./Mus_musculus.GRCm39.dna.primary_assembly.fa ./reference_index
 
 for id in SRR7821918 SRR7821919 SRR7821920 SRR7821921 SRR7821922 SRR7821937 SRR7821938 SRR7821939 SRR7821949 SRR7821950 SRR7821951 SRR7821952 SRR7821953 SRR7821968 SRR7821969 SRR7821970
