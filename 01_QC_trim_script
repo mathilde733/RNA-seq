@@ -23,4 +23,4 @@ LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
   fastqc -t 2 /data/users/mjacquey/RNA_seq_project/trim_result/${id}_*trim.fastq.gz -o /data/users/mjacquey/RNA_seq_project/trim_result
 done
 
-#trimming was not mandatory but it ensures that the quality of the samples
+#trimming using trimmomatic was not mandatory but it ensures that the quality of the samples
