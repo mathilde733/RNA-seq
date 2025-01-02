@@ -1,19 +1,9 @@
-BiocManager::install("clusterProfiler")
-BiocManager::install("org.Mm.eg.db")
-BiocManager::install("biomaRt")
-BiocManager::install('EnhancedVolcano')
 library(DESeq2)
-library(biomaRt)
-library(org.Mm.eg.db)
-library(EnhancedVolcano)
-library(clusterProfiler)
 
-#RNA_SEQ PROJECT
-
-library(DESeq2)
+#be sure that you set the same direction on R as the direction of the file "reformatted_counts.txt"
 
 featureCounts <- read.table("reformatted_counts.txt", header=TRUE, row.names=1)
-#modification des noms de colonnes
+#modification of column names
 colnames(featureCounts) <- c("SRR7821918",
                               "SRR7821919",
                               "SRR7821920",
@@ -30,8 +20,6 @@ colnames(featureCounts) <- c("SRR7821918",
                               "SRR7821968",
                               "SRR7821969",
                               "SRR7821970")
-
-#création pour l'object
 colData <- data.frame(
   groups = c("infected_lung", 
                 "infected_lung",
@@ -78,21 +66,21 @@ dds <- DESeqDataSetFromMatrix(
 # Run the DESeq pipeline
 dds <- DESeq(dds)
 
-#PLOT THE PCA AND A HEATMAP 
 
-#to remove the dependence <=> Use Variance Stabilizing Transformation (vst):
-#generally preferred because faster and adapted to larger datasets
-#we typically do not want to consider the experimental groups and set blind=TRUE
+#A) PLOT THE PCA AND A HEATMAP 
+
+#To remove the dependence <=> Use Variance Stabilizing Transformation (vst):
+#Generally preferred because faster and adapted to larger datasets
+#We typically do not want to consider the experimental groups and set blind=TRUE
 vsd <- vst(dds, blind = TRUE)
-
 #Assess how the samples cluster based on their gene expression profiles
-plotPCA(vsd, intgroup = "groups")  # Replace 'condition' with a column from your metadata
+plotPCA(vsd, intgroup = "groups") 
 
-#create a heatmap 
+#Create a heatmap 
 library(pheatmap)
-# Extract transformed values
+#Extract transformed values
 vsd_mat <- assay(vsd)
-# Calculate sample-to-sample distances
+#Calculate sample-to-sample distances
 sample_dist <- dist(t(vsd_mat))
 annotation <- data.frame(groups = colData$groups)
 rownames(annotation) <- rownames(colData)
@@ -103,28 +91,27 @@ pheatmap(
   display_numbers = TRUE
 )
 
+#B) OPTIONAL : PCoA (Principal Coordinates Analysis) 
 
-###OPTIONNEL : POUR AVOIR UNE AUTRE VUE
-### analyse PCoA (Principal Coordinates Analysis) 
-#analysis provides a graphical representation of a matrix among all sample replicates
-
-#extraction of normalized data
-normalized_data <- assay(vsd)
 library(vegan)
-# Calcul de la distance euclidean (comparison between samples)
+#Analysis that provides a graphical representation of a matrix among all sample replicates
+
+#Extraction of normalized data
+normalized_data <- assay(vsd)
+#Calcul of euclidean distance (comparison between samples)
 dist_matrix <- vegdist(t(normalized_data), method = "euclidean")
-# Réaliser le PCoA
+#PCoA analysis
 pcoa_results <- cmdscale(dist_matrix, eig = TRUE, k = 2)
 
 library(ggplot2)
-# Préparer les données pour ggplot2
+#Data for ggplot2
 pcoa_df <- data.frame(
   PC1 = pcoa_results$points[, 1],
   PC2 = pcoa_results$points[, 2],
   groups = colData$groups
 )
 
-# Visualisation
+#Visualisation
 ggplot(pcoa_df, aes(x = PC1, y = PC2, color = groups)) +
   geom_point(size = 4) +
   labs(title = "PCoA", x = "PC1", y = "PC2") +
