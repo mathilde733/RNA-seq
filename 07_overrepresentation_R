@@ -1,56 +1,57 @@
-library(clusterProfiler)
-library(org.Mm.eg.db)
+#GENERAL: the dds object and the DE_(blood or lung)_with_gene_names were created on the previous scripts named 05_explanatory_analysis_R and 06_differential_expression_R
 
-#a) BLOOD
-gene <- DE_blood_with_gene_names$ensembl_gene_id  # Differentially expressed genes
-universe <- rownames(dds)  # All genes in the analysis
+BiocManager::install("clusterProfiler")
+BiocManager::install("org.Mm.eg.db")
+library(org.Mm.eg.db)
+library(clusterProfiler)
+
+#A) For BLOOD samples
+
+gene <- DE_blood_with_gene_names$ensembl_gene_id  #Differentially expressed genes
+universe <- rownames(dds)  #All genes in the analysis
 
 go_blood <- enrichGO(
   gene          = gene,
   universe      = universe,
   OrgDb         = org.Mm.eg.db,
-  ont           = "BP",         # Choose BP, MF, CC, or ALL
+  ont           = "BP",         #Here you can choose between BP, MF, CC, or ALL 
   keyType       = "ENSEMBL"
 )
 
-# View the first few enriched GO terms
+#View the first few enriched GO terms
 head(go_blood)
-# Summarize and visualize results
+#Summarize and visualize results
 summary(go_blood)
 
-# Visualize with a barplot
+#Visualize with a bar plot
 barplot(go_blood, showCategory = 10, title = "Top 10 GO Terms - infected vs control blood")
-# Create a dot plot
+#Visualize with a dot plot
 dotplot(go_blood, showCategory = 10, title = "GO Term Enrichment - infected vs control blood")
-
+#Write the results in a csv file
 write.csv(as.data.frame(go_blood), file = "GOblood_enrichment_results.csv")
 
 
-#b) LUNG
+#B) For LUNG samples
 
-library(clusterProfiler)
-library(org.Mm.eg.db)
-
-gene <- DE_lung_with_gene_names$ensembl_gene_id  # Differentially expressed genes
-universe <- rownames(dds)  # All genes in the analysis
+gene <- DE_lung_with_gene_names$ensembl_gene_id  #Differentially expressed genes
+universe <- rownames(dds)  #All genes in the analysis
 
 go_lung <- enrichGO(
   gene          = gene,
   universe      = universe,
   OrgDb         = org.Mm.eg.db,
-  ont           = "BP",         # Choose BP, MF, CC, or ALL
+  ont           = "BP",         #Here you can choose between BP, MF, CC, or ALL 
   keyType       = "ENSEMBL"
 )
 
-
-# View the first few enriched GO terms
+#View the first few enriched GO terms
 head(go_lung)
-# Summarize and visualize results
+#Summarize and visualize results
 summary(go_lung)
 
-# Visualize with a barplot
+#Visualize with a barplot
 barplot(go_lung, showCategory = 10, title = "Top 10 GO Terms - infected vs control lung")
-# Create a dot plot
+#Visualize with a dot plot
 dotplot(go_lung, showCategory = 10, title = "GO Term Enrichment - infected vs control lung")
-
+#Write the results in a csv file
 write.csv(as.data.frame(go_lung), file = "GOlung_enrichment_results1.csv")
