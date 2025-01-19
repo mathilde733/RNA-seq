@@ -4,7 +4,7 @@ This project is a part of the study conducted by [*Singhania et al, 2019, Transc
 
 _Toxoplasma gondii_ is a widespread intracellular protozoan parasite capable of infecting most warm-blooded animals, including humans and rodents. The infection primarily targets various tissues, including the lungs and blood, where it can cause systemic and localized effects. This parasite is notable for its complex life cycle, which is divided in sexual and asexual phases. This life cycle contains intermediary hosts such as birds or any mammals, except felines that are considered as definitive host of this parasite. The infection caused by _Toxoplasma gondii_ is called the toxoplasmosis, which is typically asymptomatic in healthy individuals, but poses significant risks to immunocompromised persons or pregnant women. Additionaly, according to previous studies, it appears that this parasite can be linked to human neuropsychiatric disorders. 
 
-By integrating transcriptomic analyses of blood and lung, this study aims to bridge existing knowledge gaps and advance our understanding of the systemic impacts of T. gondii infection.
+By integrating several bioinformatics tools, this project aims to identify the differential expression of immune-related genes in infected versus control tissues, focusing on tissue-specific immune responses.  
 
 The samples are RNA sequencing data of mice's blood and lungs that were infected or not with _Toxoplasma gondii_, as described on the table below.
 
